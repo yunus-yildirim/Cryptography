@@ -13,14 +13,15 @@ import java.util.Scanner;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 public class App {
     static byte[] buf = new byte[1024];
     static Base64.Encoder enc = Base64.getEncoder();
     static Cipher ecipher;
     static Cipher dcipher;
-    public static final String AES = "AES";
 
     public static void main(String[] args) throws Exception {
 
@@ -29,56 +30,65 @@ public class App {
 
         // Create SecureRandom
         SecureRandom securerandom = new SecureRandom();
-        KeyGenerator keygenerator = KeyGenerator.getInstance(AES);
+        KeyGenerator keygenerator = KeyGenerator.getInstance("AES");
 
+        // Keys.txt file create and open for write
         String filePath = "keys.txt";
         FileWriter fileWriter = new FileWriter(filePath, false);
         PrintWriter printWriter = new PrintWriter(fileWriter);
 
         /******Q1************/
         printWriter.println("// Question 1");
+        
+        // Create key pair generator with RSA
+        KeyPairGenerator kpgRSA = KeyPairGenerator.getInstance("RSA");
+        // The length of the keys should be at least 1024 bits
+        kpgRSA.initialize(1024);
 
-        KeyPairGenerator kpgRSAGenerator = KeyPairGenerator.getInstance("RSA");
-        kpgRSAGenerator.initialize(1024);
+        // Generation an RSA public-private key pairs. Ka(+) and Ka(-)
+        KeyPair keyPairRSA = kpgRSA.generateKeyPair();
+        PublicKey publicKa = keyPairRSA.getPublic();
+        PrivateKey privateKa = keyPairRSA.getPrivate();
 
-        KeyPair kpRSA = kpgRSAGenerator.generateKeyPair();
-        PrivateKey privateKa = kpRSA.getPrivate();
-        PublicKey publicKa = kpRSA.getPublic();
+        // Create key pair generator with Elliptic-Curve Diffie Helman
+        KeyPairGenerator kpgEC = KeyPairGenerator.getInstance("EC");
+        // The length of the keys 256 bits
+        kpgEC.initialize(256);
 
-        printWriter.println("Public Key Ka(+): \n" + enc.encodeToString(publicKa.getEncoded()) + "\n");
-        printWriter.println("Private Key Ka(-): \n" + enc.encodeToString(privateKa.getEncoded()) + "\n\n");
-
-        KeyPairGenerator kpgECGenerator = KeyPairGenerator.getInstance("EC");
-        kpgECGenerator.initialize(256);
-
-        KeyPair kpEC = kpgECGenerator.generateKeyPair();
-        PrivateKey privateKb = kpEC.getPrivate();
+        // Generation an Elliptic-Curve Diffie Helman public-private key pairs. Kb(+) and Kb(-)
+        KeyPair kpEC = kpgEC.generateKeyPair();
         PublicKey publicKb = kpEC.getPublic();
-        KeyPair kpEC2 = kpgECGenerator.generateKeyPair();
-        PrivateKey privateKc = kpEC2.getPrivate();
-        PublicKey publicKc = kpEC2.getPublic();
+        PrivateKey privateKb = kpEC.getPrivate();
 
-        printWriter.println("Public Key Kb(+): \n" + enc.encodeToString(publicKb.getEncoded()) + "\n");
-        printWriter.println("Private Key Kb(-): \n" + enc.encodeToString(privateKb.getEncoded()) + "\n");
-        printWriter.println("Public Key Kc(+): \n" + enc.encodeToString(publicKc.getEncoded()) + "\n");
-        printWriter.println("Private Key Kc(-): \n" + enc.encodeToString(privateKc.getEncoded()) + "\n\n");
+        // Generation an Elliptic-Curve Diffie Helman public-private key pairs. Kc(+) and Kc(-)
+        KeyPair kpEC2 = kpgEC.generateKeyPair();
+        PublicKey publicKc = kpEC2.getPublic();
+        PrivateKey privateKc = kpEC2.getPrivate();
+
+        // Print file Public-Private key pairs.
+        printWriter.println("Public Key Ka(+)\n" + enc.encodeToString(publicKa.getEncoded()));
+        printWriter.println("Private Key Ka(-)\n" + enc.encodeToString(privateKa.getEncoded()));
+        printWriter.println("Public Key Kb(+)\n" + enc.encodeToString(publicKb.getEncoded()));
+        printWriter.println("Private Key Kb(-)\n" + enc.encodeToString(privateKb.getEncoded()));
+        printWriter.println("Public Key Kc(+)\n" + enc.encodeToString(publicKc.getEncoded()));
+        printWriter.println("Private Key Kc(-)\n" + enc.encodeToString(privateKc.getEncoded()));
 
         /******Q2************/
         printWriter.println("// Question 2");
 
         // Generation Symetric keys
         keygenerator.init(128, securerandom);
-        SecretKey symKey128 = keygenerator.generateKey();
-        printWriter.println("K1: " + new String(enc.encodeToString(symKey128.getEncoded())));
+        SecretKey K1 = keygenerator.generateKey();
+        printWriter.println("K1: " + new String(enc.encodeToString(K1.getEncoded())));
         
         keygenerator.init(256, securerandom);
-        SecretKey symKey256 = keygenerator.generateKey();
-        printWriter.println("K2: " + new String(enc.encodeToString(symKey256.getEncoded())));
+        SecretKey K2 = keygenerator.generateKey();
+        printWriter.println("K2: " + new String(enc.encodeToString(K2.getEncoded())));
 
         // K1 encryption and decryption
         printWriter.println("\nEncryption K1 with Ka(+):");
         cipher.init(Cipher.ENCRYPT_MODE, publicKa);
-        byte[] encrypted128 = cipher.doFinal((enc.encodeToString(symKey128.getEncoded())).getBytes());
+        byte[] encrypted128 = cipher.doFinal((enc.encodeToString(K1.getEncoded())).getBytes());
         printWriter.println(new String(enc.encodeToString(encrypted128)));
         printWriter.println("\nDecryption K1 with with Ka(-):");
         cipher.init(Cipher.DECRYPT_MODE, privateKa);
@@ -88,7 +98,7 @@ public class App {
         // K2 encryption and decryption
         printWriter.println("\n\nEncryption K2 with public key:\n");
         cipher.init(Cipher.ENCRYPT_MODE, publicKa);
-        byte[] encrypted256 = cipher.doFinal((enc.encodeToString(symKey256.getEncoded())).getBytes());
+        byte[] encrypted256 = cipher.doFinal((enc.encodeToString(K2.getEncoded())).getBytes());
         printWriter.println(new String(enc.encodeToString(encrypted256)));
         printWriter.println("\nDecryption K2 with private key:\n");
         cipher.init(Cipher.DECRYPT_MODE, privateKa);
@@ -118,7 +128,7 @@ public class App {
         }
         printWriter.println("H(m): " + sb.toString());
 
-        // Encryption with Ka(-)
+        // Encryption with Ka(-) 
         cipher.init(Cipher.ENCRYPT_MODE, privateKa);
         byte[] encrypt_Hm = cipher.doFinal(message.getBytes());
         printWriter.println("Ka(-)(H(m)): " + new String(enc.encodeToString(encrypt_Hm)));
@@ -127,6 +137,15 @@ public class App {
         cipher.init(Cipher.DECRYPT_MODE, publicKa);
         byte[] decHm = cipher.doFinal(encrypt_Hm);
         printWriter.println("Message: " + new String(decHm));
+
+
+
+        /******Q5************/
+        printWriter.println("// Question 5");
+
+        // Generate a message authentication code (HMAC-SHA256) using K1 the symmetric keys.
+        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+  	    sha256_HMAC.init(K1);
 
         printWriter.close();
 

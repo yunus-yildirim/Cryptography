@@ -13,24 +13,19 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         String filePath = "Keys.txt";
-        PrintWriter writer = new PrintWriter(filePath);
-        writer.print("");
-        writer.close();
+        FileWriter fileWriter = new FileWriter(filePath, false);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
 
         /// Question 1 - a
         KeyPairGenerator kpgRSAGenerator = KeyPairGenerator.getInstance("RSA");
         kpgRSAGenerator.initialize(1024);
 
         KeyPair kpRSA = kpgRSAGenerator.generateKeyPair();
-        PrivateKey prkRSA = kpRSA.getPrivate();
-        PublicKey pukRSA = kpRSA.getPublic();
+        PrivateKey privateKa = kpRSA.getPrivate();
+        PublicKey publicKa = kpRSA.getPublic();
 
-        try (FileWriter fileWriter = new FileWriter(filePath, true);
-                PrintWriter printWriter = new PrintWriter(fileWriter);) {
-
-            printWriter.println("Public Key KA(+): \n" + enc.encodeToString(pukRSA.getEncoded()) + "\n");
-            printWriter.println("Private Key KA(-): \n" + enc.encodeToString(prkRSA.getEncoded()) + "\n");
-        }
+        printWriter.println("Public Key KA(+): \n" + enc.encodeToString(publicKa.getEncoded()) + "\n");
+        printWriter.println("Private Key KA(-): \n" + enc.encodeToString(privateKa.getEncoded()) + "\n");
 
         // Question 1 - b
 
@@ -38,15 +33,17 @@ public class App {
         kpgECGenerator.initialize(256);
 
         KeyPair kpEC = kpgECGenerator.generateKeyPair();
-        PrivateKey prkEC = kpEC.getPrivate();
-        PublicKey pukEC = kpEC.getPublic();
+        PrivateKey privateKb = kpEC.getPrivate();
+        PublicKey publicKb = kpEC.getPublic();
+        KeyPair kpEC2 = kpgECGenerator.generateKeyPair();
+        PrivateKey privateKc = kpEC2.getPrivate();
+        PublicKey publicKc = kpEC2.getPublic();
 
-        try (FileWriter fileWriter = new FileWriter(filePath, true);
-                PrintWriter printWriter = new PrintWriter(fileWriter);) {
+        printWriter.println("Public Key KB(+): \n" + enc.encodeToString(publicKb.getEncoded()) + "\n");
+        printWriter.println("Private Key KB(-): \n" + enc.encodeToString(privateKb.getEncoded()) + "\n");
+        printWriter.println("Public Key KC(+): \n" + enc.encodeToString(publicKc.getEncoded()) + "\n");
+        printWriter.println("Private Key KC(-): \n" + enc.encodeToString(privateKc.getEncoded()) + "\n");
 
-            printWriter.println("Public Key KA(+): \n" + enc.encodeToString(pukEC.getEncoded()) + "\n");
-            printWriter.println("Private Key KA(-): \n" + enc.encodeToString(prkEC.getEncoded()) + "\n");
-        }
-
+        printWriter.close();
     }
 }

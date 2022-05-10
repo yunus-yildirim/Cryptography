@@ -17,19 +17,35 @@ public class App {
         writer.print("");
         writer.close();
 
-        /// Question 1
-        KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-        kpg.initialize(1024);
+        /// Question 1 - a
+        KeyPairGenerator kpgRSAGenerator = KeyPairGenerator.getInstance("RSA");
+        kpgRSAGenerator.initialize(1024);
 
-        KeyPair kp = kpg.generateKeyPair();
-        PrivateKey prk = kp.getPrivate();
-        PublicKey puk = kp.getPublic();
+        KeyPair kpRSA = kpgRSAGenerator.generateKeyPair();
+        PrivateKey prkRSA = kpRSA.getPrivate();
+        PublicKey pukRSA = kpRSA.getPublic();
 
         try (FileWriter fileWriter = new FileWriter(filePath, true);
                 PrintWriter printWriter = new PrintWriter(fileWriter);) {
 
-            printWriter.println("Public Key KA(+): \n" + enc.encodeToString(puk.getEncoded()) + "\n");
-            printWriter.println("Private Key KA(-): \n" + enc.encodeToString(prk.getEncoded()) + "\n");
+            printWriter.println("Public Key KA(+): \n" + enc.encodeToString(pukRSA.getEncoded()) + "\n");
+            printWriter.println("Private Key KA(-): \n" + enc.encodeToString(prkRSA.getEncoded()) + "\n");
+        }
+
+        // Question 1 - b
+
+        KeyPairGenerator kpgECGenerator = KeyPairGenerator.getInstance("EC");
+        kpgECGenerator.initialize(256);
+
+        KeyPair kpEC = kpgECGenerator.generateKeyPair();
+        PrivateKey prkEC = kpEC.getPrivate();
+        PublicKey pukEC = kpEC.getPublic();
+
+        try (FileWriter fileWriter = new FileWriter(filePath, true);
+                PrintWriter printWriter = new PrintWriter(fileWriter);) {
+
+            printWriter.println("Public Key KA(+): \n" + enc.encodeToString(pukEC.getEncoded()) + "\n");
+            printWriter.println("Private Key KA(-): \n" + enc.encodeToString(prkEC.getEncoded()) + "\n");
         }
 
     }

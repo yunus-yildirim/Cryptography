@@ -15,7 +15,6 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 public class App {
     static byte[] buf = new byte[1024];
@@ -25,8 +24,7 @@ public class App {
 
     public static void main(String[] args) throws Exception {
 
-        // Create RSA cipher
-        Cipher cipher = Cipher.getInstance("RSA");
+        
 
         // Create SecureRandom
         SecureRandom securerandom = new SecureRandom();
@@ -74,7 +72,7 @@ public class App {
         printWriter.println("Private Key Kc(-)\n" + enc.encodeToString(privateKc.getEncoded()));
 
         /******Q2************/
-        printWriter.println("// Question 2");
+        printWriter.println("\n// Question 2");
 
         // Generation Symetric keys
         keygenerator.init(128, securerandom);
@@ -85,25 +83,24 @@ public class App {
         SecretKey K2 = keygenerator.generateKey();
         printWriter.println("K2: " + new String(enc.encodeToString(K2.getEncoded())));
 
+        // Create RSA cipher
+        Cipher cipher = Cipher.getInstance("RSA");
+
         // K1 encryption and decryption
-        printWriter.println("\nEncryption K1 with Ka(+):");
         cipher.init(Cipher.ENCRYPT_MODE, publicKa);
-        byte[] encrypted128 = cipher.doFinal((enc.encodeToString(K1.getEncoded())).getBytes());
-        printWriter.println(new String(enc.encodeToString(encrypted128)));
-        printWriter.println("\nDecryption K1 with with Ka(-):");
+        byte[] encryptedK1 = cipher.doFinal((enc.encodeToString(K1.getEncoded())).getBytes());
+        printWriter.println("Encryption K1 with Ka(+):" + new String(enc.encodeToString(encryptedK1)));
         cipher.init(Cipher.DECRYPT_MODE, privateKa);
-        byte[] decrypted128 = cipher.doFinal(encrypted128);
-        printWriter.println(new String(decrypted128)); // This is a secret message
+        byte[] decryptedK1 = cipher.doFinal(encryptedK1);
+        printWriter.println("Decryption K1 with Ka(-):" + new String(decryptedK1));
 
         // K2 encryption and decryption
-        printWriter.println("\n\nEncryption K2 with public key:\n");
         cipher.init(Cipher.ENCRYPT_MODE, publicKa);
-        byte[] encrypted256 = cipher.doFinal((enc.encodeToString(K2.getEncoded())).getBytes());
-        printWriter.println(new String(enc.encodeToString(encrypted256)));
-        printWriter.println("\nDecryption K2 with private key:\n");
+        byte[] encryptedK2 = cipher.doFinal((enc.encodeToString(K2.getEncoded())).getBytes());
+        printWriter.println("Encryption K2 with Ka(+):" + new String(enc.encodeToString(encryptedK2)));
         cipher.init(Cipher.DECRYPT_MODE, privateKa);
-        byte[] decrypted256 = cipher.doFinal(encrypted256);
-        printWriter.println(new String(decrypted256));
+        byte[] decryptedK2 = cipher.doFinal(encryptedK2);
+        printWriter.println("Decryption K2 with Ka(-):" + new String(decryptedK2));
 
         /******Q3************/
         printWriter.println("// Question 3");

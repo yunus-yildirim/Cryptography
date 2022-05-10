@@ -97,6 +97,8 @@ public class App {
         return key;
     }
 
+    // Question 2
+
     public static byte[] decrypt(PrivateKey privateKey, byte[] encrypted) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);

@@ -118,7 +118,7 @@ public class App {
         File myObj = new File("message.txt");
         try (Scanner myReader = new Scanner(myObj)) {
             while (myReader.hasNextLine()) {
-                message = myReader.nextLine();
+                message += myReader.nextLine();
             }
         }
 
@@ -153,22 +153,47 @@ public class App {
             ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             // Encrypt
-            long startTime3 = System.nanoTime();
+            long startTime = System.nanoTime();
             ecipher.init(Cipher.ENCRYPT_MODE, K1, paramSpec);
-            long endTime3 = System.nanoTime();
+            long endTime = System.nanoTime();
             encryptAES(new FileInputStream("q4.txt"), new FileOutputStream("q4_enc_k1.txt"));
-            long time3 = endTime3 - startTime3;
-            printWriter.println("AES128 encryption took " + time3 + " nanosecond");
+            long time = endTime - startTime;
+            printWriter.println("AES128 in CBC mode encryption: " + time + " nanosecond");
 
             // Decrypt
-            long startTime4 = System.nanoTime();
+            startTime = System.nanoTime();
             dcipher.init(Cipher.DECRYPT_MODE, K1, paramSpec);
-            long endTime4 = System.nanoTime();
+            endTime = System.nanoTime();
             decryptAES(new FileInputStream("q4_enc_k1.txt"), new FileOutputStream("q4_dec_k1.txt"));
-            long time4 = endTime4 - startTime4;
-            printWriter.println("AES128 decryption took "+time4 +" nanosecond");
+            time = endTime - startTime;
+            printWriter.println("AES128 in CBC mode decryption: "+ time +" nanosecond");
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try{
+  				
+            ecipher.init(Cipher.ENCRYPT_MODE, K2, paramSpec);
+            dcipher.init(Cipher.DECRYPT_MODE, K2, paramSpec);
+            
+            // Encrypt
+            long startTime = System.nanoTime();
+            ecipher.init(Cipher.ENCRYPT_MODE, K2, paramSpec);
+            long endTime = System.nanoTime();
+            encryptAES(new FileInputStream("q4.txt"), new FileOutputStream("q4_enc_k2.txt"));
+            long time = endTime - startTime;
+            printWriter.println("AES256 in CBC mode encryption: " + time + " nanosecond");
+
+            // Decrypt
+            startTime = System.nanoTime();
+            dcipher.init(Cipher.DECRYPT_MODE, K2, paramSpec);
+            endTime = System.nanoTime();
+            decryptAES(new FileInputStream("q4_enc_k2.txt"), new FileOutputStream("q4_dec_k2.txt"));
+            time = endTime - startTime;
+            printWriter.println("AES256 in CBC mode decryption: "+ time +" nanosecond");
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
 

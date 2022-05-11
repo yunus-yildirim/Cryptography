@@ -151,51 +151,83 @@ public class App {
 
         try {
             ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            // Encrypt
+            // Encryption AES (K1) in CBC mode
             long startTime = System.nanoTime();
             ecipher.init(Cipher.ENCRYPT_MODE, K1, paramSpec);
             long endTime = System.nanoTime();
-            encryptAES(new FileInputStream("q4.txt"), new FileOutputStream("q4_enc_k1.txt"));
+            encryptAES(new FileInputStream("image.jpg"), new FileOutputStream("cbc(128)Enc.jpg"));
             long time = endTime - startTime;
             printWriter.println("AES128 in CBC mode encryption: " + time + " nanosecond");
 
-            // Decrypt
+            dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            // Decryption AES (K1) in CBC mode
             startTime = System.nanoTime();
             dcipher.init(Cipher.DECRYPT_MODE, K1, paramSpec);
             endTime = System.nanoTime();
-            decryptAES(new FileInputStream("q4_enc_k1.txt"), new FileOutputStream("q4_dec_k1.txt"));
+            decryptAES(new FileInputStream("cbc(128)Enc.jpg"), new FileOutputStream("cbc(128)Dec.jpg"));
             time = endTime - startTime;
-            printWriter.println("AES128 in CBC mode decryption: "+ time +" nanosecond");
+            printWriter.println("AES128 in CBC mode decryption: " + time + " nanosecond");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
-  				
-            ecipher.init(Cipher.ENCRYPT_MODE, K2, paramSpec);
-            dcipher.init(Cipher.DECRYPT_MODE, K2, paramSpec);
-            
-            // Encrypt
+        try {
+
+            ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+
+            // Encryption AES (K2) in CBC mode
             long startTime = System.nanoTime();
             ecipher.init(Cipher.ENCRYPT_MODE, K2, paramSpec);
             long endTime = System.nanoTime();
-            encryptAES(new FileInputStream("q4.txt"), new FileOutputStream("q4_enc_k2.txt"));
+            encryptAES(new FileInputStream("image.jpg"), new FileOutputStream("cbc(256)Enc.jpg"));
             long time = endTime - startTime;
             printWriter.println("AES256 in CBC mode encryption: " + time + " nanosecond");
 
-            // Decrypt
+            ecipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            // Decryption AES (K2) in CBC mode
             startTime = System.nanoTime();
             dcipher.init(Cipher.DECRYPT_MODE, K2, paramSpec);
             endTime = System.nanoTime();
-            decryptAES(new FileInputStream("q4_enc_k2.txt"), new FileOutputStream("q4_dec_k2.txt"));
+            decryptAES(new FileInputStream("cbc(256)Enc.jpg"), new FileOutputStream("cbc(256)Dec.jpg"));
             time = endTime - startTime;
-            printWriter.println("AES256 in CBC mode decryption: "+ time +" nanosecond");
-        }
-        catch (Exception e){
+            printWriter.println("AES256 in CBC mode decryption: " + time + " nanosecond");
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        SecureRandom secureRandom = new SecureRandom();
+        // Then generate the key. Can be 128, 192 or 256 bit
+        byte[] keyByte = new byte[256 / 8];
+        secureRandom.nextBytes(keyByte);
+        // Now generate a nonce. You can also use an ever-increasing counter, which is
+        // even more secure. NEVER REUSE A NONCE!
+        byte[] nonce = new byte[96 / 8];
+        secureRandom.nextBytes(nonce);
+        iv = new byte[128 / 8];
+        System.arraycopy(nonce, 0, iv, 0, nonce.length);
+
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+
+        
+        ecipher = Cipher.getInstance("AES/CTR/NoPadding");
+        // Encryption AES (K3) in CTR mode
+        long startTime = System.nanoTime();
+        ecipher.init(Cipher.ENCRYPT_MODE, K2, ivSpec);
+        long endTime = System.nanoTime();
+        encryptAES(new FileInputStream("image.jpg"), new FileOutputStream("ctr(256)Enc.jpg"));
+        long time = endTime - startTime;
+        printWriter.println("AES256 in CTR mode encryption: " + time + " nanosecond");
+
+        
+        dcipher = Cipher.getInstance("AES/CTR/NoPadding");
+        // Encryption AES (K3) in CTR mode
+        startTime = System.nanoTime();
+        dcipher.init(Cipher.DECRYPT_MODE, K2, ivSpec);
+        endTime = System.nanoTime();
+        encryptAES(new FileInputStream("ctr(256)Enc.jpg"), new FileOutputStream("ctr(256)Dec.jpg"));
+        time = endTime - startTime;
+        printWriter.println("AES256 in CTR mode decryption: " + time + " nanosecond");
 
         /****** Q5 ************/
         printWriter.println("\n// Question 5");
@@ -209,30 +241,27 @@ public class App {
 
     }
 
-    public static void encryptAES(InputStream in, OutputStream out){
-        try{
+    public static void encryptAES(InputStream in, OutputStream out) {
+        try {
             out = new CipherOutputStream(out, ecipher);
             int numRead = 0;
-            while ((numRead = in.read(buf)) >= 0){
+            while ((numRead = in.read(buf)) >= 0) {
                 out.write(buf, 0, numRead);
             }
             out.close();
-        }
-        catch (java.io.IOException e){
+        } catch (java.io.IOException e) {
         }
     }
-    
-    public static void decryptAES(InputStream in, OutputStream out){
-        try{
+
+    public static void decryptAES(InputStream in, OutputStream out) {
+        try {
             in = new CipherInputStream(in, dcipher);
             int numRead = 0;
-            while ((numRead = in.read(buf)) >= 0){
+            while ((numRead = in.read(buf)) >= 0) {
                 out.write(buf, 0, numRead);
             }
             out.close();
-        }
-        catch (java.io.IOException e)
-        {
+        } catch (java.io.IOException e) {
         }
     }
 }

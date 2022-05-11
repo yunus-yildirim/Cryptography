@@ -1,0 +1,59 @@
+// Question 1
+Public Key Ka(+)
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9F3H9pZuriWDbgOqVZatihcdpwq+JQPfljvZNETMI9JaRA/7xR4tv98syyb0jsEC7XopctdvcpRNd6V7gvTXtbIDbrPK2WM7M5xvbK6bUk+0QAo9Btn2V7H+EJxG57f82WmDwFLGlYlP9rvK8HLx9+JNCazo7VMcdpfpzP38oMwIDAQAB
+Private Key Ka(-)
+MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAL0Xcf2lm6uJYNuA6pVlq2KFx2nCr4lA9+WO9k0RMwj0lpED/vFHi2/3yzLJvSOwQLteily129ylE13pXuC9Ne1sgNus8rZYzsznG9srptST7RACj0G2fZXsf4QnEbnt/zZaYPAUsaViU/2u8rwcvH34k0JrOjtUxx2l+nM/fygzAgMBAAECgYAqPj+gC8xQMRurTgyaHaGBHCPlk7HFdvcqmJqbsvj0yjeM5BijbHlRJUmG6hzQCUMc2M0OUy5wB4zhEQ66JGsUYSpTIgBfTfMe+RCYvrTYbR3gteJjwFi58gK4On2zrPOo28lpoQOAVlBY9w+zWdA7cCb+yEZH2BA3NXjkmrSt2QJBAL4VMczDiXsDAdt2y5MMsJhBzWqAyq2N5UeIoiVjRHqFC+oiJp+tzor/VqhMahDXcO58EF7OmzPqZ5mZRQS0HQUCQQD+qkFTitysg/csu/PKF5yUK0oU7wP8vaR2O4ICasVYxYM4YB+0L8F6PsqH+cUW+FmilqVXQXd8pACF5ksssfXXAkABliWzQtKL70t9rHEoiguTScFQKUEHz85hGXfY/godR60AyEYwQQAfUuBDSVf9Sf8MTobIc8sB1OwGcSwNTP+NAkEA9T/tTZErV5B3F8Oh0fvPNPpDi8lq45mWqq5AVCeTChycdExN++8JurqBvVWSsr5VRDkj3dYURhqCznCr8M0pXQJAcAKVxSas3ttJi8XTkmAzKEZZGvHAoLlqnhxqId11wnJBNtjsl7OfJZHF0qhpRpGTGcrTwMhzOASrrw8sJ3CtOw==
+Public Key Kb(+)
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE8EGXwR+u9xUrz0gA6/5//+D1LNMGcZ7Rm49eh65C3ysrHFwpiD3oPXvTNxPONNPq9cNS8X3//zp7ZxWJC1vg/w==
+Private Key Kb(-)
+MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCDwpVoB6k1vreOPQavVhM2s53CxcrPnShw+b9SJSH93GQ==
+Public Key Kc(+)
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAErZWPMV+7aKI5O1AcZmRIpmtEbzE0q1hheVHuliRF6eyVRBtmiwXDFU5jTR5fkhaf970uYr/2o/16mFmA6tTYAQ==
+Private Key Kc(-)
+MEECAQAwEwYHKoZIzj0CAQYIKoZIzj0DAQcEJzAlAgEBBCD1ruSn33Sb+fNtTyyckCHYHNx1W5LjX2FT8wiQgcN1oA==
+
+// Question 2
+K1: J1BBOI3XxOcG/RvSk2FTAw==
+K2: CEQmTrxkl7HhTvO6iszX3LhKWOnSSm1A9pTcz9KOvh4=
+Encryption K1 with Ka(+):urctf+J7bmCvAhTaJP5yyu4eDtB+fftNM+ldwiQzflVM2wHPL8KplShaB2mI0fKih8WeOuSITzVDeezCk2XdTWWFISRG3wdyctbeJyCCKgbpN1DhoiUsB0NnUxG3CNeVDPuFYWsUKkZRAcBQDXWhSHtrHdS4ZpPI4nbBpN6lfk4=
+Decryption K1 with Ka(-):J1BBOI3XxOcG/RvSk2FTAw==
+Encryption K2 with Ka(+):a+5rHbLsfKuaFtCwu6XGc2+/LoYMhVGgjFNeBSNG6a2cKVqvkOZqu2r9pNqIDcC1EOHLOzgpEnfozga8RfkljQWftmdn0MYdLb4gRV714MoPHSECUSVNAkRwfakSJ3j0YveZ15kOarAVWZzvlpYIWERQYrXiFzrjOr0P/Q9afgw=
+Decryption K2 with Ka(-):CEQmTrxkl7HhTvO6iszX3LhKWOnSSm1A9pTcz9KOvh4=
+
+// Question 3
+Message:
+The war on Ukraine is senseless in its scope,
+ruthless in its dimensions and limitless in its potential for global harm. 
+The cycle of death, destruction, dislocation and disruption must stop.
+The war on Ukraine is senseless in its scope,
+ruthless in its dimensions and limitless in its potential for global harm. 
+The cycle of death, destruction, dislocation and disruption must stop.
+The war on Ukraine is senseless in its scope,
+ruthless in its dimensions and limitless in its potential for global harm. 
+The cycle of death, destruction, dislocation and disruption must stop.
+The war on Ukraine is senseless in its scope,
+ruthless in its dimensions and limitless in its potential for global harm. 
+The cycle of death, destruction, dislocation and disruption must stop.
+The war on Ukraine is senseless in its scope,
+ruthless in its dimensions and limitless in its potential for global harm. 
+The cycle of death, destruction, dislocation and disruption must stop.
+The war on Ukraine is senseless in its scope,
+ruthless in its dimensions and limitless in its potential for global harm. 
+The cycle of death, destruction, dislocation and disruption must stop.
+
+H(m): ��){�5?�[��}���G�.�ae���iKr��
+Encrypted Message: s�:��ۿ��7��^�(��E?�`�L1�oֈ��;�j��B��{?1ے�I��$���-�{�j���
+��?5��ۀ�({� _��(]rbZ���J�"�T�f�JU��ީ�nxYJ?Մ?���
+Decrypted Message: ��){�5?�[��}���G�.�ae���iKr��
+
+// Question 4
+AES128 in CBC mode encryption: 331800 nanosecond
+AES128 in CBC mode decryption: 139100 nanosecond
+AES256 in CBC mode encryption: 85000 nanosecond
+AES256 in CBC mode decryption: 35200 nanosecond
+AES256 in CTR mode encryption: 96900 nanosecond
+AES256 in CTR mode decryption: 75900 nanosecond
+
+// Question 5
+HMAC
+gelIKON6kxwrQMYMmQmHs3OdSm35KFGUknD/ln0Jiq8=

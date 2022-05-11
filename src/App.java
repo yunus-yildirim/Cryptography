@@ -224,10 +224,14 @@ public class App {
         /****** Q5 ************/
         printWriter.println("\n// Question 5");
 
-        // Generate a message authentication code (HMAC-SHA256) using K1 the symmetric
-        // keys.
+        // Get message from message.txt file
+        messageBytes = Files.readAllBytes(Paths.get("message.txt"));
+
+        // Generate a message authentication code (HMAC-SHA256) using K2 the symmetric
         Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-        sha256_HMAC.init(K1);
+        sha256_HMAC.init(K2);
+
+        printWriter.println("HMAC\n" +enc.encodeToString(sha256_HMAC.doFinal(messageBytes)));
 
         printWriter.close();
 

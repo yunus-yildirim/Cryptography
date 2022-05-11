@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -6,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
@@ -14,7 +15,6 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
-import java.util.Scanner;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -114,35 +114,29 @@ public class App {
         printWriter.println("\n// Question 3");
 
         // Get message from file
-        String message = "";
-        File myObj = new File("message.txt");
-        try (Scanner myReader = new Scanner(myObj)) {
-            while (myReader.hasNextLine()) {
-                message += myReader.nextLine();
-            }
-        }
+        byte[] messageBytes = Files.readAllBytes(Paths.get("message.txt"));
+        printWriter.println("Message:\n"+new String(messageBytes, StandardCharsets.UTF_8)+"\n");
 
-        // Apply SHA256 Hash algorithm (Obtain the message digest, H(m))
+        // Apply SHA256 Hash algorithm
         MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] hashInBytes = md.digest(message.getBytes(StandardCharsets.UTF_8));
+        byte[] messageHash = md.digest(messageBytes);
+        printWriter.println("H(m): " + new String(messageHash));
 
-        // bytes to hex
-        StringBuilder sb = new StringBuilder();
-        for (byte b : hashInBytes) {
-            sb.append(String.format("%02x", b));
-        }
-        printWriter.println("H(m): " + sb.toString());
-
-        // Encryption with Ka(-)
+        // Encryption H(m) with Private KA
+        cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, privateKa);
-        byte[] encrypt_Hm = cipher.doFinal(message.getBytes());
-        printWriter.println("Digital Signature: " + new String(enc.encodeToString(encrypt_Hm)));
+        byte[] digitalSignature = cipher.doFinal(messageHash);
+        Files.write(Paths.get("digital_signature"), digitalSignature);
+        printWriter.println("Encrypted Message: " + new String(digitalSignature));
 
-        // Decryption with Ka(+)
-        cipher.init(Cipher.DECRYPT_MODE, publicKa);
-        byte[] decHm = cipher.doFinal(encrypt_Hm);
-        printWriter.println("Message: " + new String(decHm));
-
+        // Decryption Digital signature with public KA
+        byte[] encryptedMessageHash = Files.readAllBytes(Paths.get("digital_signature"));
+        Cipher cipher2 = Cipher.getInstance("RSA");
+        cipher2.init(Cipher.DECRYPT_MODE, publicKa);
+        byte[] decryptedMessageHash = cipher2.doFinal(encryptedMessageHash);
+        printWriter.println("Decrypted Message: " + new String(decryptedMessageHash));
+ 
+      
         /****** Q4 ************/
         printWriter.println("\n// Question 4");
 
@@ -209,7 +203,6 @@ public class App {
 
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
-        
         ecipher = Cipher.getInstance("AES/CTR/NoPadding");
         // Encryption AES (K3) in CTR mode
         long startTime = System.nanoTime();
@@ -219,7 +212,6 @@ public class App {
         long time = endTime - startTime;
         printWriter.println("AES256 in CTR mode encryption: " + time + " nanosecond");
 
-        
         dcipher = Cipher.getInstance("AES/CTR/NoPadding");
         // Encryption AES (K3) in CTR mode
         startTime = System.nanoTime();
@@ -263,5 +255,17 @@ public class App {
             out.close();
         } catch (java.io.IOException e) {
         }
+    }
+
+    public static byte[] signDecrypt(PublicKey publicKey, byte[] encrypted) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.DECRYPT_MODE, publicKey);
+        return cipher.doFinal(encrypted);
+    }
+
+    public static byte[] signEncrypt(PrivateKey privateKey, String message) throws Exception {
+        Cipher cipher = Cipher.getInstance("RSA");
+        cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+        return cipher.doFinal(message.getBytes());
     }
 }
